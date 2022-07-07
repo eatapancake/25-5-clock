@@ -12,16 +12,23 @@ function Session({
   handleReset,
   controlTime,
   onBreak,
-  handlePlay,
 }) {
+  const toggleButton = () => {
+    if (timerOn) {
+      setTimerOn(false);
+    } else {
+      setTimerOn(true);
+    }
+    console.log("timerOn: " + timerOn);
+  };
+
   return (
-    <div id="display-container">
+    <div>
       <h2 id="timer-label">{onBreak ? "Break" : "Session"}</h2>
       <p id="time-left">{formatTime(displayTime)}</p>
       <span>
-        {/* onClick={controlTime} */}
-        <button id="start_stop" onClick={handlePlay}>
-          {!timerOn ? "▶" : "⏸"}
+        <button id="start_stop" onClick={controlTime}>
+          {timerOn ? "▶" : "⏸"}
         </button>
 
         <button id="reset" onClick={handleReset}>
@@ -37,7 +44,7 @@ function App() {
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
   // const [timerType, setTimerType] = useState("session");
-  const [timerOn, setTimerOn] = useState(false);
+  const [timerOn, setTimerOn] = useState(true);
   const [onBreak, setOnBreak] = useState(false);
   const [breakAudio, setBreakAudio] = useState(new Audio(beep));
 
@@ -84,91 +91,65 @@ function App() {
   };
 
   const handleReset = () => {
-    // setBreakTime(5);
-    // setSessionTime(25);
-    // setDisplayTime(25 * 60);
-    // setOnBreak(false);
-    clearTimeout(timeout);
-    setTimerOn(false);
-    setDisplayTime(1500);
     setBreakTime(5);
     setSessionTime(25);
+    setDisplayTime(25 * 60);
     setOnBreak(false);
-    const audio = document.getElementById("beep");
-    audio.pause();
-    audio.currentTime = 0;
   };
 
-  const timeout = () =>
-    setTimeout(() => {
-      if (displayTime > 0 && timerOn) {
-        setDisplayTime((prev) => prev - 1);
-      }
-    }, 1000);
+  const controlTime = () => {
+    let second = 1000;
+    let date = new Date().getTime();
+    let nextDate = new Date().getTime() + second;
+    let onBreakVar = onBreak;
 
-  const handlePlay = () => {
-    clearTimeout(timeout());
+    if (sessionTime < 1) {
+      setSessionTime(1);
+    }
+    if (breakTime < 1) {
+      setBreakTime(1);
+    }
+    if (displayTime < 0) {
+      setDisplayTime(0);
+    }
+
+    if (timerOn) {
+      let interval = setInterval(() => {
+        date = new Date().getTime();
+        if (date > nextDate) {
+          setDisplayTime((prev) => {
+            if (prev <= 0 && !onBreakVar) {
+              playBreakSound();
+              setOnBreak(true);
+              return breakTime * 60;
+            } else if (prev <= 0 && onBreakVar) {
+              playBreakSound();
+              setOnBreak(false);
+              return sessionTime * 60;
+            }
+            return prev - 1;
+          });
+          nextDate += second;
+        }
+      }, 30);
+      localStorage.clear();
+      localStorage.setItem("interval-id", interval);
+    }
+
+    if (!timerOn) {
+      clearInterval(localStorage.getItem("interval-id"));
+    }
     setTimerOn(!timerOn);
   };
 
-  useEffect(() => {
-    const clock = () => {
-      if (timerOn) {
-        timeout();
-        resetTimer();
-      } else {
-        clearTimeout(timeout);
-      }
-    };
-
-    const resetTimer = () => {
-      const audio = document.getElementById("beep");
-
-      if (sessionTime < 0) {
-        setSessionTime(1);
-        if (!onBreak) setDisplayTime(1);
-      }
-      if (sessionTime > 60) {
-        setSessionTime(60);
-        if (!onBreak) setDisplayTime(60);
-      }
-      if (breakTime > 60) {
-        setBreakTime(60);
-        if (onBreak) setDisplayTime(60);
-      }
-      if (breakTime < 0) {
-        setBreakTime(1);
-        if (onBreak) setDisplayTime(1);
-      }
-      if (displayTime <= 0 && !onBreak) {
-        setDisplayTime(breakTime * 60);
-        setOnBreak(true);
-        audio.play();
-      }
-      if (displayTime <= 0 && onBreak) {
-        setDisplayTime(sessionTime * 60);
-        setOnBreak(false);
-        audio.play();
-      }
-    };
-    clock();
-
-    console.log("timer On: " + timerOn);
-  }, [timerOn, displayTime, onBreak, breakTime, sessionTime]);
+  // useEffect(() => {
+  //   controlTime();
+  // }, []);
   return (
     <div className="App">
       <header className="App-header">
         <h1>25 + 5 Clock</h1>
-        <Session
-          timerOn={timerOn}
-          setTimerOn={setTimerOn}
-          formatTime={formatTime}
-          displayTime={displayTime}
-          handleReset={handleReset}
-          // controlTime={controlTime}
-          handlePlay={handlePlay}
-          onBreak={onBreak}
-        />
+        <h3></h3>
         <span id="TimerContainer">
           <BreakLength
             title="Break Length"
@@ -188,13 +169,16 @@ function App() {
             timerOn={timerOn}
           />
         </span>
+        <Session
+          timerOn={timerOn}
+          setTimerOn={setTimerOn}
+          formatTime={formatTime}
+          displayTime={displayTime}
+          handleReset={handleReset}
+          controlTime={controlTime}
+          onBreak={onBreak}
+        />
       </header>
-      <audio
-        id="beep"
-        preload="auto"
-        src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
-        volume={0.1}
-      ></audio>
     </div>
   );
 }

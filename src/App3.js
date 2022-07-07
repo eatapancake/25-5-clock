@@ -15,7 +15,7 @@ function Session({
   handlePlay,
 }) {
   return (
-    <div id="display-container">
+    <div>
       <h2 id="timer-label">{onBreak ? "Break" : "Session"}</h2>
       <p id="time-left">{formatTime(displayTime)}</p>
       <span>
@@ -159,16 +159,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>25 + 5 Clock</h1>
-        <Session
-          timerOn={timerOn}
-          setTimerOn={setTimerOn}
-          formatTime={formatTime}
-          displayTime={displayTime}
-          handleReset={handleReset}
-          // controlTime={controlTime}
-          handlePlay={handlePlay}
-          onBreak={onBreak}
-        />
+
         <span id="TimerContainer">
           <BreakLength
             title="Break Length"
@@ -188,6 +179,16 @@ function App() {
             timerOn={timerOn}
           />
         </span>
+        <Session
+          timerOn={timerOn}
+          setTimerOn={setTimerOn}
+          formatTime={formatTime}
+          displayTime={displayTime}
+          handleReset={handleReset}
+          // controlTime={controlTime}
+          handlePlay={handlePlay}
+          onBreak={onBreak}
+        />
       </header>
       <audio
         id="beep"
