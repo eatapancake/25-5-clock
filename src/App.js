@@ -167,6 +167,7 @@ function App() {
           <BreakLength
             title="Break Length"
             breakTime={breakTime}
+            handleCountChange={handleCountChange}
             type="break"
             timerOn={timerOn}
           />
