@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Length.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 function BreakLength({ title, breakTime, handleCountChange, type, timerOn }) {
   return (
@@ -12,16 +14,18 @@ function BreakLength({ title, breakTime, handleCountChange, type, timerOn }) {
           onClick={() => handleCountChange(-1, type)}
           disabled={timerOn}
         >
-          👇
+          <FontAwesomeIcon className="icon-arrow" icon={faArrowDown} />
         </button>
-        <p id="break-length">{breakTime}</p>
+        <p className="length-item" id="break-length">
+          {breakTime}
+        </p>
         <button
           id="break-increment"
           className="length-item"
           onClick={() => handleCountChange(1, type)}
           disabled={timerOn}
         >
-          👆
+          <FontAwesomeIcon className="icon-arrow" icon={faArrowUp} />
         </button>
       </span>
     </div>

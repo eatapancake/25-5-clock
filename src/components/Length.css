@@ -4,6 +4,9 @@
   justify-content: center;
 }
 .length-item {
-  margin: 0px 35px 0px 35px;
+  margin: 0px 5px 20px 5px;
   padding: 5px 10px 5px 10px;
+}
+.icon-arrow {
+  font-size: 25px;
 }

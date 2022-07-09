@@ -1,39 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@600;700&display=swap");
+
 * {
   padding: 0;
   margin: 0;
+  font-family: "Dosis", sans-serif;
 }
 .App {
   text-align: center;
 }
 
 .App-header {
-  background-color: cornsilk;
+  background-color: #fcecee;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 25px;
-  color: white;
+  color: pink;
 }
 
 #TimerContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   /* background-color: aqua; */
   width: 900px;
 }
 .TimerItem {
   padding: 10px;
-
-  background-color: pink;
-  border-radius: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 2px 2px 10px #f7a8b3;
+}
+#time-left {
+  font-size: 80px;
 }
 h1 {
-  margin-bottom: 100px;
-  color: pink;
+  margin-bottom: 60px;
+  color: #5d1a1b;
+  font-size: 60px;
 }
 h3 {
   /* background-color: green; */
@@ -42,23 +51,43 @@ h3 {
 h2 {
   padding: 10px;
 }
-#time-left {
-  font-size: 60px;
-}
+
 #display-container {
-  background-color: pink;
+  background-color: white;
   padding: 0;
-  height: 200px;
-  width: 400px;
+  height: 260px;
+  width: 455px;
   padding: 10px;
-  margin: 0px 0px 100px 0px;
+  margin: 0px 0px 50px 0px;
   border-radius: 20px;
+  box-shadow: 2px 2px 10px #f7a8b3;
 }
 
 #start_stop,
 #reset {
-  margin: 10px;
-  padding: 0px;
+  margin: 20px 10px;
+  padding: 10px 0px 10px 0px;
   font-size: 25px;
-  width: 50px;
+  width: 70px;
+  text-align: center;
+}
+
+button {
+  outline: none;
+  border: none;
+  background-color: #f7a8b3;
+  color: white;
+  border-radius: 10px;
+}
+button:hover {
+  background-color: rgb(238, 99, 123);
+  transition: 200ms;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: rgb(233, 215, 218);
+  cursor: default;
+}
+.icon {
+  font-size: 30px;
 }

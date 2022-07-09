@@ -1,31 +1,38 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import BreakLength from "./components/BreakLength.js";
 import SessionLength from "./components/SessionLength";
 import beep from "./beep.mp3";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faArrowsRotate,
+} from "@fortawesome/free-solid-svg-icons";
+import "./App.css";
 
 function Session({
   timerOn,
-  setTimerOn,
   formatTime,
   displayTime,
   handleReset,
-  controlTime,
   onBreak,
   handlePlay,
 }) {
+  const playIcon = <FontAwesomeIcon className="icon" icon={faPlay} />;
+  const pauseIcon = <FontAwesomeIcon className="icon" icon={faPause} />;
+  const refreshIcon = (
+    <FontAwesomeIcon className="icon" icon={faArrowsRotate} />
+  );
   return (
     <div id="display-container">
       <h2 id="timer-label">{onBreak ? "Break" : "Session"}</h2>
       <p id="time-left">{formatTime(displayTime)}</p>
       <span>
-        {/* onClick={controlTime} */}
         <button id="start_stop" onClick={handlePlay}>
-          {!timerOn ? "▶" : "⏸"}
+          {!timerOn ? playIcon : pauseIcon}
         </button>
-
         <button id="reset" onClick={handleReset}>
-          🔃
+          {refreshIcon}
         </button>
       </span>
     </div>
@@ -36,19 +43,9 @@ function App() {
   const [displayTime, setDisplayTime] = useState(25 * 60);
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
-  // const [timerType, setTimerType] = useState("session");
   const [timerOn, setTimerOn] = useState(false);
   const [onBreak, setOnBreak] = useState(false);
-  const [breakAudio, setBreakAudio] = useState(new Audio(beep));
 
-  const playBreakSound = () => {
-    breakAudio.currentTime = 0;
-    breakAudio.volume = 0.1;
-    breakAudio.play();
-    // setTimeout(() => {
-    //   breakAudio.pause();
-    // }, 5100);
-  };
   const formatTime = (time) => {
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
@@ -84,10 +81,6 @@ function App() {
   };
 
   const handleReset = () => {
-    // setBreakTime(5);
-    // setSessionTime(25);
-    // setDisplayTime(25 * 60);
-    // setOnBreak(false);
     clearTimeout(timeout);
     setTimerOn(false);
     setDisplayTime(1500);
@@ -143,11 +136,13 @@ function App() {
       if (displayTime <= 0 && !onBreak) {
         setDisplayTime(breakTime * 60);
         setOnBreak(true);
+        audio.volume = 0.2;
         audio.play();
       }
       if (displayTime <= 0 && onBreak) {
         setDisplayTime(sessionTime * 60);
         setOnBreak(false);
+        audio.volume = 0.2;
         audio.play();
       }
     };
@@ -158,31 +153,26 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>25 + 5 Clock</h1>
+        <h1>♥ 25 + 5 Clock ♥</h1>
         <Session
           timerOn={timerOn}
-          setTimerOn={setTimerOn}
           formatTime={formatTime}
           displayTime={displayTime}
           handleReset={handleReset}
-          // controlTime={controlTime}
           handlePlay={handlePlay}
           onBreak={onBreak}
         />
+
         <span id="TimerContainer">
           <BreakLength
             title="Break Length"
             breakTime={breakTime}
-            formatTime={formatTime}
-            handleCountChange={handleCountChange}
             type="break"
             timerOn={timerOn}
           />
           <SessionLength
             title="Session Length"
             sessionTime={sessionTime}
-            formatTime={formatTime}
-            setDisplayTime={setDisplayTime}
             handleCountChange={handleCountChange}
             type="session"
             timerOn={timerOn}
@@ -192,8 +182,9 @@ function App() {
       <audio
         id="beep"
         preload="auto"
-        src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
-        volume={0.1}
+        // src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+        src={beep}
+        volume={0.25}
       ></audio>
     </div>
   );
